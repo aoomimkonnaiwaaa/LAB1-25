@@ -155,6 +155,7 @@ int main(void)
 			  MatrixBackup[j] = 0;
 		  }
 	  	  k = 0;
+	  	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 	  }
   }
 
