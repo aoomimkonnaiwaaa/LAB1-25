@@ -141,17 +141,21 @@ int main(void)
 	      }
 	  if (ButtonMatrix == 0b1000000000000){
 		  for (int j=0; j<11; j++) {
-			  if (MatrixBackup[j] = ButtonMatrix[j]){
+			  if (MatrixBackup[j] == MatrixCorrect[j]) {
 				  checker++;
 			  }
-
 		  }
-
 	  }
 	  if (checker == 11){
 			  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET); //1
 	  }
   }
+
+//  if (ButtonMatrix == 0b1000000000000){
+//		  for (int j=0; j<11; j++) {
+//			  if (MatrixBackup[j] = ButtonMatrix[j]){
+//				  checker++;
+//			  }
 
 
   /* USER CODE END 3 */
