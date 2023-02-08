@@ -139,7 +139,7 @@ int main(void)
 	                 buttonLog = ButtonMatrix; //update log status
 	          }
 	      }
-	  if (ButtonMatrix == 0b1000000000000){
+	  if (ButtonMatrix == 0b1000000000000000){ // check from right value and input
 		  for (int j=0; j<11; j++) {
 			  if (MatrixBackup[j] == MatrixCorrect[j]) {
 				  checker++;
@@ -148,6 +148,13 @@ int main(void)
 	  }
 	  if (checker == 11){
 			  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET); //1
+	  }
+
+  if (ButtonMatrix == 0b1000000000000){ //clear
+	  	  for (int j=0; j<11; j++) {
+			  MatrixBackup[j] = 0;
+		  }
+	  	  k = 0;
 	  }
   }
 
