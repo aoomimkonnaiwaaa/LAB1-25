@@ -65,9 +65,10 @@ struct PortPin L[4] =
 uint16_t ButtonMatrix = 0;
 uint16_t MatrixBackup[11] = {0};
 uint16_t MatrixCorrect[11] = {0b1000000000, 0b10, 0b10000000000, 0b10, 0b1000, 0b100000, 0b1000, 0b1000, 0b1000, 0b1000000, 0b100000};
-uint8_t buttonLog = 0;
+uint16_t buttonLog = 0;
 uint8_t flag = 0;
 uint8_t checker = 0;
+uint8_t k=0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -124,24 +125,32 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
 	  static uint32_t timestamp = 0;
-   if(HAL_GetTick() >= timestamp)
-   {
-    timestamp = HAL_GetTick() + 100;
-	int j;
-	for (j = 0; j < 4; j++) {
-	ReadMatrixButton1Row(); }
-   }
+	  if(HAL_GetTick() >= timestamp)
+	      {
+	          timestamp = HAL_GetTick() + 100;
+	          for (int j = 0; j < 4; j++) {
+	              ReadMatrixButton1Row();
+	              if (buttonLog == 0 && ButtonMatrix != 0 && k <= 10){ //detect switch was pressed
+	                  MatrixBackup[k] = ButtonMatrix;
+	                  k++;
+	                 }
+	                 buttonLog = ButtonMatrix; //update log status
+	          }
+	      }
+	  if (ButtonMatrix == 0b1000000000000){
+		  for (int j=0; j<11; j++) {
+			  if (MatrixBackup[j] = ButtonMatrix[j]){
+				  checker++;
+			  }
 
-    if (buttonLog == 0 && ButtonMatrix != 0){ //detect switch was pressed
-   		flag = 1;
-   	}
-   	else {
-   		flag = 0; //detect switch was not pressed
-   	}
-    flag = 0;
-   	buttonLog = ButtonMatrix; //update log status
+		  }
 
+	  }
+	  if (checker == 11){
+			  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET); //1
+	  }
   }
 
 
@@ -321,8 +330,6 @@ void ReadMatrixButton1Row()
  HAL_GPIO_WritePin(R[(X+1)%4].PORT, R[(X+1)%4].PIN, 0);
  X++;
  X%=4;
-
- MatrixBackup[1] = ButtonMatrix;
 
 }
 
