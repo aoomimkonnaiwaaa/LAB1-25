@@ -63,6 +63,11 @@ struct PortPin L[4] =
 };
 
 uint16_t ButtonMatrix = 0;
+uint8_t buttonLog = 0;
+uint8_t flag = 0;
+uint8_t checker = 0;
+uint8_t state = 1;
+int eiei;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -71,7 +76,8 @@ static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 void ReadMatrixButton1Row();
 /* USER CODE BEGIN PFP */
-
+	void myState();
+	void ReadMatrixButton1Row();
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -86,7 +92,6 @@ void ReadMatrixButton1Row();
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -119,13 +124,29 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-   static uint32_t timestamp = 0;
+   eiei = eiei + 1;
+	  static uint32_t timestamp = 0;
    if(HAL_GetTick() >= timestamp)
    {
     timestamp = HAL_GetTick() + 100;
-    ReadMatrixButton1Row();
+	int j;
+	for (j = 0; j < 4; j++) {
+	ReadMatrixButton1Row(); }
    }
+
+    if (buttonLog == 0 && ButtonMatrix != 0){ //detect switch was pressed
+   		flag = 1;
+   	}
+   	else {
+   		flag = 0; //detect switch was not pressed
+   	}
+//    myState();
+    flag = 0;
+   	buttonLog = ButtonMatrix; //update log status
+
   }
+
+
   /* USER CODE END 3 */
 }
 
@@ -290,18 +311,87 @@ void ReadMatrixButton1Row()
   {
    ButtonMatrix &= ~(1<<(X*4 + i));
   }
-  else
+  else if (HAL_GPIO_ReadPin(L[i].PORT, L[i].PIN) == 0 )
   {
    ButtonMatrix |= 1<<(X*4+i);
   }
  }
  // SET RX
  HAL_GPIO_WritePin(R[X].PORT, R[X].PIN, 1);
+
  // RESET RX+1%4
  HAL_GPIO_WritePin(R[(X+1)%4].PORT, R[(X+1)%4].PIN, 0);
  X++;
  X%=4;
 }
+//void myState()
+//{
+//	switch (state){
+//	    case 1:
+//	        if (ButtonMatrix == 0b100000000) { //6
+//	            state = 2;
+//	        	checker = checker + 1;
+//	            }
+//	        else {
+//	        	state = 1;
+//	        }
+//		    break;
+//	    case 2:
+//	    	if (ButtonMatrix == 0b100){ //4
+//	    		state = 3;
+//	    		checker = checker + 1;
+//	    	}
+//	      break;
+//	    case 3:
+//	    	if (ButtonMatrix == 0b11){ //3
+//	    		state = 4;
+//	    		checker = checker + 1;
+//	    	}
+//	    	 break;
+//	    case 4:
+//	    	if (ButtonMatrix == 0b100){ //4
+//	    		state = 5;
+//	    		checker = checker + 1;
+//	    	}
+//	    	 break;
+//	    case 5:
+//	    	if (ButtonMatrix == 0b100){ //0
+//	    		state = 6;
+//	    		checker = checker + 1;
+//	    	}
+//	    	 break;
+//	    case 6:
+//	    	if (ButtonMatrix == 0b100000){ //5
+//	    		state = 7;
+//	    		checker = checker + 1;
+//	    	}
+//	    	 break;
+//	    case 7:
+//	    	if (ButtonMatrix == 0b100){ //0
+//	    		state = 8;
+//	    		checker = checker + 1;
+//	    	}
+//	    	 break;
+//	    case 8:
+//	    	if (ButtonMatrix == 0b100){ //0
+//	    		state = 7;
+//	    	}
+//	    	else if (ButtonMatrix == 0b1000000){//2
+//	    		state = 9;
+//	    		checker = checker + 1;
+//	    	}
+//	    	 break;
+//	    case 9:
+//	    	if (ButtonMatrix == 0b100000){ //5
+//	    		checker = checker + 1;
+//	    	}
+//	    	 break;
+//	}
+//	if (checker == 11) {
+//		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET); //1
+//		  HAL_Delay(500); //Delay 1Hz = 500ms
+//	}
+//}
 /* USER CODE END 4 */
 
 /**
