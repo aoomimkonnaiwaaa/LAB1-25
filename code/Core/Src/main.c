@@ -159,12 +159,6 @@ int main(void)
 	  }
   }
 
-//  if (ButtonMatrix == 0b1000000000000){
-//		  for (int j=0; j<11; j++) {
-//			  if (MatrixBackup[j] = ButtonMatrix[j]){
-//				  checker++;
-//			  }
-
 
   /* USER CODE END 3 */
 }
@@ -324,13 +318,13 @@ void ReadMatrixButton1Row()
 {
  static uint8_t X = 0;
  register int i;
- for (i = 0; i < 4; i++)
+ for (i = 0; i < 4; i++) //for reading L each position
  {
-  if(HAL_GPIO_ReadPin(L[i].PORT, L[i].PIN) == 1)
+  if(HAL_GPIO_ReadPin(L[i].PORT, L[i].PIN) == 1) //true -> high
   {
    ButtonMatrix &= ~(1<<(X*4 + i));
   }
-  else if (HAL_GPIO_ReadPin(L[i].PORT, L[i].PIN) == 0 )
+  else if (HAL_GPIO_ReadPin(L[i].PORT, L[i].PIN) == 0 ) //false -> low
   {
    ButtonMatrix |= 1<<(X*4+i);
   }
@@ -345,79 +339,6 @@ void ReadMatrixButton1Row()
 
 }
 
-
-//MatrixBackup[0] =
-
-
-//void myState()
-//{
-//	test = ButtonMatrix;
-//	switch (state){
-//	    case 1:
-//	        if (ButtonMatrix == 0b100000000) { //6
-//	            state = 2;
-//	        	checker = checker + 1;
-//	            }
-//	        else {
-//	        	state = 1;
-//	        }
-//		    break;
-//	    case 2:
-//	    	if (ButtonMatrix == 0b100){ //4
-//	    		state = 3;
-//	    		checker = checker + 1;
-//	    	}
-//	      break;
-//	    case 3:
-//	    	if (ButtonMatrix == 0b11){ //3
-//	    		state = 4;
-//	    		checker = checker + 1;
-//	    	}
-//	    	 break;
-//	    case 4:
-//	    	if (ButtonMatrix == 0b100){ //4
-//	    		state = 5;
-//	    		checker = checker + 1;
-//	    	}
-//	    	 break;
-//	    case 5:
-//	    	if (ButtonMatrix == 0b100){ //0
-//	    		state = 6;
-//	    		checker = checker + 1;
-//	    	}
-//	    	 break;
-//	    case 6:
-//	    	if (ButtonMatrix == 0b100000){ //5
-//	    		state = 7;
-//	    		checker = checker + 1;
-//	    	}
-//	    	 break;
-//	    case 7:
-//	    	if (ButtonMatrix == 0b100){ //0
-//	    		state = 8;
-//	    		checker = checker + 1;
-//	    	}
-//	    	 break;
-//	    case 8:
-//	    	if (ButtonMatrix == 0b100){ //0
-//	    		state = 7;
-//	    	}
-//	    	else if (ButtonMatrix == 0b1000000){//2
-//	    		state = 9;
-//	    		checker = checker + 1;
-//	    	}
-//	    	 break;
-//	    case 9:
-//	    	if (ButtonMatrix == 0b100000){ //5
-//	    		checker = checker + 1;
-//	    	}
-//	    	 break;
-//	}
-//	if (checker == 11) {
-//		  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET); //1
-//		  HAL_Delay(500); //Delay 1Hz = 500ms
-//	}
-//}
 /* USER CODE END 4 */
 
 /**
